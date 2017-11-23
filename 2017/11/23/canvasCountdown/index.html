@@ -9,6 +9,10 @@
 
     <!--Description-->
     
+        <meta name="description" content="&amp;lt;canvas id=&amp;quot;canvas&amp;quot; style=&amp;quot;height: :100%&amp;quot;&amp;gt;&amp;lt;/canvas&amp;gt;
+
+&amp;lt;script type=&amp;quot;text/javascript&amp;quot; src=&amp;quot;digit.js&amp;qu">
+    
 
     <!--Author-->
     
@@ -67,7 +71,130 @@
         <div class="row">
             <!-- Post Main Content -->
             <div class="post-content col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                
+                <pre><code>    &lt;canvas id=&quot;canvas&quot; style=&quot;height: :100%&quot;&gt;&lt;/canvas&gt;
+
+&lt;script type=&quot;text/javascript&quot; src=&quot;digit.js&quot;&gt;&lt;/script&gt;
+&lt;!-- &lt;script type=&quot;text/javascript&quot; src=&quot;countDown.js&quot;&gt;&lt;/script&gt; --&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;
+    var window_width=&quot;1024&quot;;
+</code></pre><p>var window_height=”768”;<br>var raduis = 8;<br>var marginTop = 60;<br>var marginLeft = 30;</p>
+<p>var endTime = new Date();<br>endTime.setTime(endTime.getTime() + 3600 * 1000)<br>var curShowTimeSeconds = 0;</p>
+<p>// var ball = {x:512, y:100, r:20, g:2, vx:-4, vy:0, color:”#005588”};<br>var balls = [];<br>const colors = [“#33B5E5”,”#0099CC”,”#AA66CC”,”#9933CC”,”#99CC00”,”#669900”,”#FFBB33”,”#FF8800”,”#FF4444”,”#CC0000”];<br>window.onload = function () {<br>    var canvas = document.getElementById(“canvas”),<br>        context = canvas.getContext(“2d”);</p>
+<pre><code>canvas.width = window_width;
+canvas.height = window_height;
+
+curShowTimeSeconds = getCurrentShowTimeSeconds();
+
+setInterval(
+    function () {
+        render( context );
+        update();
+    }, 50);
+</code></pre><p>}</p>
+<p>function getCurrentShowTimeSeconds() {<br>    var curTime = new Date();<br>    var ret = endTime.getTime() - curTime.getTime();<br>    ret = Math.round(ret/1000);</p>
+<pre><code>return ret &gt;= 0 ? ret : 0;
+</code></pre><p>}</p>
+<p>function update() {<br>    var nextShowTimeSeconds = getCurrentShowTimeSeconds();<br>    var nextHours = parseInt(nextShowTimeSeconds / 3600),<br>        nextMinutes = parseInt((nextShowTimeSeconds - nextHours * 3600) / 60),<br>        nextSeconds = nextShowTimeSeconds % 60;</p>
+<pre><code>var curHours = parseInt(curShowTimeSeconds / 3600),
+    curMinutes = parseInt((curShowTimeSeconds - curHours * 3600) / 60),
+    curSeconds = curShowTimeSeconds % 60;
+
+if (nextSeconds != curSeconds) {
+
+    if (parseInt(curHours/10) != parseInt(nextHours/10)) {
+        addBalls( marginLeft + 0, marginTop, parseInt(curHours/10) );
+    }
+    if (parseInt(curHours%10) != parseInt(nextHours%10)) {
+        addBalls( marginLeft + 15*(raduis + 1), marginTop, parseInt(curHours/10));
+    }
+    if (parseInt(curMinutes/10) != parseInt(nextHours/10)) {
+        addBalls( marginLeft + 39*(raduis + 1), marginTop, parseInt(curMinutes/10) );
+    }
+    if (parseInt(curMinutes%10) != parseInt(nextHours%10)) {
+        addBalls( marginLeft + 54*(raduis + 1), marginTop, parseInt(curMinutes%10));
+    }
+    if (parseInt(curSeconds/10) != parseInt(nextHours/10)) {
+        addBalls( marginLeft + 78*(raduis + 1), marginTop, parseInt(curSeconds/10));
+    }
+    if (parseInt(curSeconds%10) != parseInt(nextHours%10)) {
+        addBalls( marginLeft + 93*(raduis + 1), marginTop, parseInt(curSeconds%10));
+    }
+
+    curShowTimeSeconds = nextShowTimeSeconds;
+
+
+}
+
+updateBalls();
+// ball.x += ball.vx;
+// ball.y += ball.vy;
+// ball.vy += ball.g;
+
+// if (ball.y &gt;= 768 - ball.r) {
+//     ball.y = 768 - ball.r;
+//     ball.vy = - ball.vy * 0.5
+// }
+
+console.log( balls.length)
+</code></pre><p>}</p>
+<p>function updateBalls() {<br>    for (var i = 0; i &lt; balls.length; i++) {<br>        balls[i].x += balls[i].vx;<br>        balls[i].y += balls[i].vy;<br>        balls[i].vy += balls[i].g;<br>        if (balls[i].y &gt;= window_height - raduis) {<br>            balls[i].y = window_height - raduis;<br>            balls[i].vy = -balls[i].vy * 0.75;<br>        }<br>    }</p>
+<pre><code>var cnt = 0;
+for (var i = 0; i &lt; balls.length; i++) {
+    if (balls[i].x + raduis &gt; 0 &amp;&amp; balls[i].x - raduis &lt; window_width) {
+        balls[cnt++] = balls[i];
+    }
+}
+while(balls.length &gt; cnt) {
+    balls.pop();
+}
+
+// while(balls.length &gt; Math.min(500, cnt)) {
+//     balls.pop();
+// }
+</code></pre><p>}</p>
+<p>function addBalls(x, y, num) {<br>    for (var i = 0; i &lt; digit[num].length; i++) {<br>        for (var j = 0; j &lt; digit[num][i].length; j++) {<br>            if (digit[num][i][j] == 1) {<br>                var aBall = {<br>                    x: x + j<em>2</em>(raduis + 1) + (raduis + 1),<br>                    y: y + i<em>2</em>(raduis + 1) + (raduis + 1),<br>                    g: 1.5 + Math.random(),<br>                    vx: Math.pow(-1, Math.ceil(Math.random()<em>1000)) </em> 4,<br>                    vy: -5,<br>                    color: colors[Math.floor(Math.random()*colors.length)]<br>                }</p>
+<pre><code>            balls.push(aBall);
+        }
+    }
+}
+</code></pre><p>}</p>
+<p>function render(cxt) {</p>
+<pre><code>cxt.clearRect(0, 0, window_width, window_height);
+
+var hours = parseInt(curShowTimeSeconds / 3600),
+    minutes = parseInt((curShowTimeSeconds - hours * 3600) / 60),
+    seconds = curShowTimeSeconds % 60;
+
+renderDigit(marginLeft, marginTop, parseInt(hours/10), cxt);
+renderDigit(marginLeft + 15 * (raduis + 1), marginTop, parseInt(hours%10), cxt);
+renderDigit(marginLeft + 30 * (raduis + 1), marginTop, 10, cxt);
+renderDigit(marginLeft + 39 * (raduis + 1), marginTop, parseInt(minutes/10), cxt);
+renderDigit(marginLeft + 54 * (raduis + 1), marginTop, parseInt(minutes%10), cxt);
+renderDigit(marginLeft + 69 * (raduis + 1), marginTop, 10, cxt);
+renderDigit(marginLeft + 78 * (raduis + 1), marginTop, parseInt(seconds/10), cxt);
+renderDigit(marginLeft + 93 * (raduis + 1), marginTop, parseInt(seconds%10), cxt);
+
+// cxt.clearRect(0, 0, cxt.canvas.width, cxt.canvas.height);
+// cxt.fillStyle = ball.color;
+
+// cxt.beginPath();
+// cxt.arc(ball.x, ball.y, ball.r, 0, 2*Math.PI);
+// cxt.fill();
+
+for (var i = 0; i &lt; balls.length; i++) {
+    cxt.fillStyle = balls[i].color;
+    cxt.beginPath();
+    cxt.arc(balls[i].x, balls[i].y, raduis, 0, 2*Math.PI, true);
+    cxt.fill();
+}
+</code></pre><p>}<br>function renderDigit(x, y, num, cxt) {<br>    cxt.fillStyle = “rgb(0, 102, 153)”;<br>    for (var i = 0; i &lt; digit[num].length; i++) {<br>        for (var j = 0; j &lt; digit[num][i].length; j++) {<br>            if (digit[num][i][j] == 1) {<br>                cxt.beginPath();<br>                cxt.arc(<br>                    x + j <em> 2 </em> (raduis + 1) + raduis + 1,<br>                    y + i <em> 2 </em> (raduis + 1) + raduis + 1,<br>                    raduis,<br>                    0,<br>                    2*Math.PI<br>                    );<br>                cxt.closePath();</p>
+<pre><code>            cxt.fill();
+        }
+    }
+}
+</code></pre><p>}</p>
+<pre><code>&lt;/script&gt;
+</code></pre>
  
                 <!-- Meta -->
                 <div class="post-meta">
